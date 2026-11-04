@@ -1,0 +1,43 @@
+# EAS Build ignore list
+# Everything here is excluded from the project archive uploaded to EAS.
+# EAS already reinstalls node_modules and runs prebuild on its own.
+
+# Dependencies (EAS reinstalls from package.json + lockfile)
+node_modules/
+
+# Local Metro and Expo caches
+.metro-cache/
+.expo/
+.expo-shared/
+
+# Native projects — regenerated on EAS by the `prebuildCommand`
+# (expo prebuild --clean) on every build, so the entire local android/ + ios/
+# trees (including multi-GB Gradle/CMake build artifacts) are never uploaded.
+# This keeps the project archive at a few MB instead of >1 GB.
+android/
+ios/
+
+# Logs and temp files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local env files (already in env block of eas.json)
+.env.local
+.env.*.local
+
+# Backup files
+*.bak
+*.orig
+*~
+
+# Test coverage
+coverage/
+
+# TypeScript build info
+*.tsbuildinfo

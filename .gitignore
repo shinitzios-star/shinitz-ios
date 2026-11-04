@@ -1,0 +1,43 @@
+# This repository (shinitz-ios) is PUBLIC and holds the mobile apps only.
+
+# Excluded projects
+/admin-panel/
+/macaroni*/
+/app/
+/restaurant-portal/
+/_android_local_backup/
+
+# Local-only folders and notes
+/_certs/
+/_apks/
+/_tools/
+/.idea/
+/.claude/
+/MERGE-PLAN.md
+/SYNC-AUDIT.md
+/WEBSITE-SETUP.md
+
+# Secrets - never commit
+.env
+.env.*
+!.env.example
+google-services*.json
+google-services.json.bak
+GoogleService-Info.plist
+*.keystore
+!debug.keystore
+*.jks
+*.p12
+*.pem
+*.key
+*adminsdk*.json
+*service-account*.json
+
+# Build output and caches
+node_modules/
+.metro-cache/
+.expo/
+*.aab
+*.apk
+*.ipa
+*.log

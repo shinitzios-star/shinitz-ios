@@ -1,0 +1,22 @@
+{
+  "name": "shinitz-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "consumer": "yarn workspace @shinitz/consumer start",
+    "rider": "yarn workspace @shinitz/rider start",
+    "restaurant": "yarn workspace @shinitz/restaurant start",
+    "kirana": "yarn workspace @shinitz/kirana start",
+    "admin": "yarn workspace @shinitz/admin start",
+    "build:consumer": "yarn workspace @shinitz/consumer build:apk",
+    "build:rider": "yarn workspace @shinitz/rider build:apk",
+    "build:restaurant": "yarn workspace @shinitz/restaurant build:apk",
+    "build:kirana": "yarn workspace @shinitz/kirana build:apk"
+  },
+  "packageManager": "yarn@1.22.22",
+  "comment": "Expo monorepo. Each app builds an independent APK with its own package name; the only shared code lives in packages/shared-core."
+}

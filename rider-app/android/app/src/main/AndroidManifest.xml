@@ -1,0 +1,98 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+  <!--
+    expo-audio ships a media-controls foreground service in its own manifest,
+    which drags in FOREGROUND_SERVICE_MEDIA_PLAYBACK and makes Play treat this
+    as a media-playback app (it then demands a written justification for the
+    permission). Shinitz never plays media in the background: the new-order
+    buzzer is configured shouldPlayInBackground:false in useOrderAlert.ts, so
+    that service is never started, and background alerting is an FCM push with
+    a notification-channel sound, which needs none of this.
+    Removed at merge time. The foreground buzzer is unaffected.
+  -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" tools:node="remove"/>
+  <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <!-- Required on Android 14+ to start the location foreground service that
+       keeps tracking a delivery in progress. Without it the service throws on
+       start and Active Delivery Mode dies the moment the app is backgrounded. -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <category android:name="android.intent.category.BROWSABLE"/>
+      <data android:scheme="https"/>
+    </intent>
+    <!-- External navigation app detection (Android 11+ package visibility).
+         Lets Linking.canOpenURL see Waze / Mappls / HERE; Google Maps is
+         handled via the geo/google.navigation intents below. Without this the
+         navigation picker finds no apps at all and silently offers nothing. -->
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="geo"/>
+    </intent>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="waze"/>
+    </intent>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="mapmyindia"/>
+    </intent>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="here-location"/>
+    </intent>
+    <package android:name="com.google.android.apps.maps"/>
+    <package android:name="com.waze"/>
+    <package android:name="com.mmi.maps"/>
+    <package android:name="com.here.app.maps"/>
+  </queries>
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:supportsRtl="true" android:enableOnBackInvokedCallback="false" android:fullBackupContent="@xml/secure_store_backup_rules" android:dataExtractionRules="@xml/secure_store_data_extraction_rules">
+    <!-- Background media-controls service from expo-audio: never started (the
+         buzzer runs foreground-only), and its presence is what makes Play ask
+         for a FOREGROUND_SERVICE_MEDIA_PLAYBACK justification. -->
+    <service android:name="expo.modules.audio.service.AudioControlsService" tools:node="remove"/>
+    <!-- Recording service from expo-audio: the rider app never records audio. -->
+    <service android:name="expo.modules.audio.service.AudioRecordingService" tools:node="remove"/>
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCGpLV4hjfpp-viRaI974pTyRCrx7hMN-I"/>
+    <!-- react-native-firebase_messaging ships its own defaults (@color/white and
+         its own icon). tools:replace keeps Shinitz's branded notification colour
+         and icon, which is what riders actually see on an incoming-order alert. -->
+    <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/notification_icon_color" tools:replace="android:resource"/>
+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" tools:replace="android:resource"/>
+    <meta-data android:name="expo.modules.notifications.default_notification_color" android:resource="@color/notification_icon_color"/>
+    <meta-data android:name="expo.modules.notifications.default_notification_icon" android:resource="@drawable/notification_icon"/>
+    <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
+    <activity android:name=".MainActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode|locale|layoutDirection" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="shinitzrider"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="com.razorpay.CheckoutActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" android:exported="true" tools:replace="android:exported"/>
+    <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+    <receiver android:name="com.razorpay.RzpTokenReceiver" android:exported="true" tools:replace="android:exported"/>
+  </application>
+</manifest>

@@ -1,0 +1,71 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+  <!--
+    expo-audio ships a MediaSessionService for background/lock-screen audio
+    controls and declares FOREGROUND_SERVICE_MEDIA_PLAYBACK for it. Shinitz only
+    plays a short order-alert buzzer in the foreground (useOrderAlert sets
+    shouldPlayInBackground: false), so that service is never started and the
+    permission is unwarranted — Play flags it as a media-playback app.
+    Removed at merge time; ordinary notification sounds and the buzzer are
+    unaffected.
+  -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" tools:node="remove"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <category android:name="android.intent.category.BROWSABLE"/>
+      <data android:scheme="https"/>
+    </intent>
+    <!--
+      Android 11+ (API 30) package visibility: without this, queryIntentActivities
+      for upi:// returns EMPTY, so Razorpay's checkout finds no installed UPI apps
+      and the UPI intent option never appears. Required for GPay/PhonePe/Paytm
+      to be listed in the payment sheet.
+    -->
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="upi"/>
+    </intent>
+  </queries>
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:supportsRtl="true" android:enableOnBackInvokedCallback="false" android:fullBackupContent="@xml/secure_store_backup_rules" android:dataExtractionRules="@xml/secure_store_data_extraction_rules">
+    <!-- Background media-controls service from expo-audio: unused (see above). -->
+    <service android:name="expo.modules.audio.service.AudioControlsService" tools:node="remove"/>
+    <!-- Recording service from expo-audio: unused too — voice notes record via expo-av. -->
+    <service android:name="expo.modules.audio.service.AudioRecordingService" tools:node="remove"/>
+
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCGpLV4hjfpp-viRaI974pTyRCrx7hMN-I"/>
+    <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/notification_icon_color" tools:replace="android:resource"/>
+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon"/>
+    <meta-data android:name="expo.modules.notifications.default_notification_color" android:resource="@color/notification_icon_color"/>
+    <meta-data android:name="expo.modules.notifications.default_notification_icon" android:resource="@drawable/notification_icon"/>
+    <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
+    <activity android:name=".MainActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode|locale|layoutDirection" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="shinitz"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="com.razorpay.CheckoutActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" android:exported="true" tools:replace="android:exported"/>
+    <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+    <receiver android:name="com.razorpay.RzpTokenReceiver" android:exported="true" tools:replace="android:exported"/>
+  </application>
+</manifest>

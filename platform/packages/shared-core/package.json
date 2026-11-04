@@ -1,0 +1,15 @@
+{
+  "name": "@shinitz/shared-core",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "comment": "Source-only shared package (Metro transpiles TS directly). The ONLY code shared across all apps: API/network layer, common models/types, constants/theme, shared stores (auth, settings), i18n, and reusable UI primitives. App-specific code stays in each app.",
+  "peerDependencies": {
+    "axios": "*",
+    "expo": "*",
+    "react": "*",
+    "react-native": "*",
+    "zustand": "*"
+  }
+}

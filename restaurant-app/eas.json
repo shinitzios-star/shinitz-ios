@@ -1,0 +1,71 @@
+{
+  "cli": {
+    "version": ">= 7.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug",
+        "image": "ubuntu-24.04-jdk-17-ndk-r27b"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      },
+      "env": {
+        "EXPO_PUBLIC_BACKEND_URL": "https://shinitz-backend.onrender.com",
+        "EXPO_PUBLIC_MSG91_AUTH_KEY": "496001AOnM2z3pu699e9a40P1",
+        "EXPO_PUBLIC_MSG91_TEMPLATE_ID": "69da106e9f81691a360f1e38",
+        "EXPO_PUBLIC_RAZORPAY_KEY_ID": "rzp_test_SuiUkJSTTtfmQR",
+        "EXPO_PUBLIC_RAZORPAY_CONFIG_ID": "config_SukbiZxYKcP2hM"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "autoIncrement": true,
+      "prebuildCommand": "npx expo prebuild --clean --platform android",
+      "android": {
+        "buildType": "apk",
+        "image": "ubuntu-24.04-jdk-17-ndk-r27b"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_BACKEND_URL": "https://shinitz-backend.onrender.com",
+        "EXPO_PUBLIC_MSG91_AUTH_KEY": "496001AOnM2z3pu699e9a40P1",
+        "EXPO_PUBLIC_MSG91_TEMPLATE_ID": "69da106e9f81691a360f1e38",
+        "EXPO_PUBLIC_RAZORPAY_KEY_ID": "rzp_test_SuiUkJSTTtfmQR",
+        "EXPO_PUBLIC_RAZORPAY_CONFIG_ID": "config_SukbiZxYKcP2hM"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle",
+        "image": "ubuntu-24.04-jdk-17-ndk-r27b"
+      },
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "env": {
+        "EXPO_PUBLIC_BACKEND_URL": "https://shinitz-backend.onrender.com",
+        "EXPO_PUBLIC_MSG91_AUTH_KEY": "496001AOnM2z3pu699e9a40P1",
+        "EXPO_PUBLIC_MSG91_TEMPLATE_ID": "69da106e9f81691a360f1e38",
+        "EXPO_PUBLIC_RAZORPAY_KEY_ID": "rzp_test_SuiUkJSTTtfmQR",
+        "EXPO_PUBLIC_RAZORPAY_CONFIG_ID": "config_SukbiZxYKcP2hM"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./play-store-key.json",
+        "track": "internal"
+      }
+    }
+  }
+}
